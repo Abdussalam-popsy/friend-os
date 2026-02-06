@@ -51,6 +51,38 @@ const config: Config = {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
+        friendos: {
+          '50': 'hsl(var(--friendos-50))',
+          '300': 'hsl(var(--friendos-300))',
+          '500': 'hsl(var(--friendos-500))',
+        },
+        'badge-blue': {
+          DEFAULT: 'hsl(var(--badge-blue))',
+          bg: 'hsl(var(--badge-blue-bg))',
+        },
+        'badge-green': {
+          DEFAULT: 'hsl(var(--badge-green))',
+          bg: 'hsl(var(--badge-green-bg))',
+        },
+        'badge-purple': {
+          DEFAULT: 'hsl(var(--badge-purple))',
+          bg: 'hsl(var(--badge-purple-bg))',
+        },
+        'badge-orange': {
+          DEFAULT: 'hsl(var(--badge-orange))',
+          bg: 'hsl(var(--badge-orange-bg))',
+        },
+        'badge-red': {
+          DEFAULT: 'hsl(var(--badge-red))',
+          bg: 'hsl(var(--badge-red-bg))',
+        },
+        'badge-gray': {
+          DEFAULT: 'hsl(var(--badge-gray))',
+          bg: 'hsl(var(--badge-gray-bg))',
+        },
+        sponsored: {
+          bg: 'hsl(var(--sponsored-bg))',
+        },
         sidebar: {
           DEFAULT: 'hsl(var(--sidebar-background))',
           foreground: 'hsl(var(--sidebar-foreground))',
@@ -84,10 +116,20 @@ const config: Config = {
             height: '0',
           },
         },
+        'pulse-dot': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.4' },
+        },
+        'fade-in': {
+          from: { opacity: '0', transform: 'translateY(4px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-dot': 'pulse-dot 1.5s ease-in-out infinite',
+        'fade-in': 'fade-in 0.3s ease-out',
       },
     },
   },
