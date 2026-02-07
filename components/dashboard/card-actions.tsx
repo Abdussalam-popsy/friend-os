@@ -15,7 +15,7 @@ export function CardActions({ actions, compact = false }: CardActionsProps) {
           variant={action.variant ?? (i === 0 ? "default" : "outline")}
           size="sm"
           className={cn(
-            "rounded-lg text-xs font-medium",
+            "rounded-full text-xs font-medium",
             compact && "h-7 px-2.5 text-[11px]",
             i === 0 && !action.variant && "bg-primary text-primary-foreground hover:bg-primary/90",
           )}

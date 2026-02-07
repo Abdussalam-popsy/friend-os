@@ -10,10 +10,10 @@ interface ShoppingCardProps {
 export function ShoppingCard({ compact = false }: ShoppingCardProps) {
   return (
     <Card className={cn("overflow-hidden transition-shadow hover:shadow-md", compact && "shadow-none")}>
-      <CardContent className={cn("flex flex-col gap-3", compact ? "p-4" : "p-5")}>
+      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
         <CategoryBadge category="Shopping" />
         {/* Product image placeholder */}
-        <div className="flex h-32 items-center justify-center rounded-xl bg-secondary">
+        <div className="flex h-32 items-center justify-center rounded-2xl bg-secondary">
           <svg
             width="48"
             height="48"
@@ -28,7 +28,7 @@ export function ShoppingCard({ compact = false }: ShoppingCardProps) {
           </svg>
         </div>
         <div className="flex flex-col gap-1">
-          <h3 className={cn("font-semibold text-foreground leading-snug", compact ? "text-sm" : "text-base")}>
+          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
             Nike Dunk Low Retro
           </h3>
           <div className="flex items-center gap-2">

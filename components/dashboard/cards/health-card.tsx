@@ -16,17 +16,17 @@ const dataPoints = [
 export function HealthCard({ compact = false }: HealthCardProps) {
   return (
     <Card className={cn("overflow-hidden transition-shadow hover:shadow-md", compact && "shadow-none")}>
-      <CardContent className={cn("flex flex-col gap-3", compact ? "p-4" : "p-5")}>
+      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
         <CategoryBadge category="Health" />
         <div className="flex flex-col gap-1">
-          <h3 className={cn("font-semibold text-foreground leading-snug", compact ? "text-sm" : "text-base")}>
+          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
             Sleep Pattern Alert
           </h3>
           <p className="text-xs text-muted-foreground">
             {"You\u2019ve been up past midnight 4/5 nights this week"}
           </p>
         </div>
-        <div className="flex flex-col gap-0 rounded-xl bg-secondary overflow-hidden">
+        <div className="flex flex-col gap-0 rounded-2xl bg-secondary overflow-hidden">
           {dataPoints.map((dp, i) => (
             <div
               key={dp.label}

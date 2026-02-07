@@ -8,7 +8,11 @@ import { KanbanView } from "@/components/dashboard/kanban-view"
 
 type LayoutMode = "tabbed" | "kanban"
 
-export function Dashboard() {
+interface DashboardProps {
+  onBack?: () => void
+}
+
+export function Dashboard({ onBack }: DashboardProps) {
   const [layout, setLayout] = useState<LayoutMode>("tabbed")
   const [activeTab, setActiveTab] = useState<TabValue>("Summary")
 
@@ -19,6 +23,7 @@ export function Dashboard() {
         onToggleLayout={() =>
           setLayout((prev) => (prev === "tabbed" ? "kanban" : "tabbed"))
         }
+        onBack={onBack}
       />
       <div className="flex flex-col gap-4">
         <TabPills activeTab={activeTab} onTabChange={setActiveTab} />

@@ -124,12 +124,23 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(4px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        'soft-pulse': {
+          '0%, 100%': {
+            opacity: '1',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: '0.85',
+            transform: 'scale(1.03)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'pulse-dot': 'pulse-dot 1.5s ease-in-out infinite',
         'fade-in': 'fade-in 0.3s ease-out',
+        'soft-pulse': 'soft-pulse 2s ease-in-out infinite',
       },
     },
   },

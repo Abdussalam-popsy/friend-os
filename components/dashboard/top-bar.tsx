@@ -1,6 +1,6 @@
 "use client"
 
-import { LayoutGrid, Columns3 } from "lucide-react"
+import { LayoutGrid, Columns3, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -9,12 +9,23 @@ type LayoutMode = "tabbed" | "kanban"
 interface TopBarProps {
   layout: LayoutMode
   onToggleLayout: () => void
+  onBack?: () => void
 }
 
-export function TopBar({ layout, onToggleLayout }: TopBarProps) {
+export function TopBar({ layout, onToggleLayout, onBack }: TopBarProps) {
   return (
     <header className="flex items-center justify-between px-8 py-5">
       <div className="flex items-center gap-3">
+        {onBack && (
+          <button
+            onClick={onBack}
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            aria-label="Back to desktop"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+        )}
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
           <svg
             width="20"

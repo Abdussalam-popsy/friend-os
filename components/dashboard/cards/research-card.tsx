@@ -10,18 +10,18 @@ interface ResearchCardProps {
 export function ResearchCard({ compact = false }: ResearchCardProps) {
   return (
     <Card className={cn("overflow-hidden transition-shadow hover:shadow-md", compact && "shadow-none")}>
-      <CardContent className={cn("flex flex-col gap-3", compact ? "p-4" : "p-5")}>
+      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
         <div className="flex items-center justify-between">
           <CategoryBadge category="Research" />
-          <span className="inline-flex items-center rounded-full bg-badge-blue-bg px-2 py-0.5 text-xs font-bold text-badge-blue">
-            94%
+          <span className="inline-flex items-center rounded-full bg-emerald-100/80 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+            94% match
           </span>
         </div>
         <div className="flex flex-col gap-1">
-          <h3 className={cn("font-semibold text-foreground leading-snug", compact ? "text-sm" : "text-base")}>
+          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
             Novel biomarkers for early-stage cancer detection
           </h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Nature Medicine &middot; Zhang et al.
           </p>
         </div>
@@ -29,7 +29,7 @@ export function ResearchCard({ compact = false }: ResearchCardProps) {
           {["Liquid Biopsy", "ctDNA Markers", "Early Detection"].map((tag) => (
             <span
               key={tag}
-              className="rounded-md bg-secondary px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+              className="rounded-full bg-secondary px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground"
             >
               {tag}
             </span>

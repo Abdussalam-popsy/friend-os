@@ -16,17 +16,17 @@ interface TaskCardProps {
 export function TaskCard({ compact = false }: TaskCardProps) {
   return (
     <Card className={cn("overflow-hidden transition-shadow hover:shadow-md", compact && "shadow-none")}>
-      <CardContent className={cn("flex flex-col gap-3", compact ? "p-4" : "p-5")}>
+      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
         <CategoryBadge category="Task" />
         <div className="flex flex-col gap-1">
-          <h3 className={cn("font-semibold text-foreground leading-snug", compact ? "text-sm" : "text-base")}>
+          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
             Gift Research Complete
           </h3>
           <p className="text-xs text-muted-foreground">
             {"Found 3 birthday gifts for your mum under £50"}
           </p>
         </div>
-        <div className="flex flex-col gap-0 rounded-xl border border-border overflow-hidden">
+        <div className="flex flex-col gap-0 rounded-2xl border border-border overflow-hidden">
           {miniResults.map((item, i) => (
             <div
               key={item.name}

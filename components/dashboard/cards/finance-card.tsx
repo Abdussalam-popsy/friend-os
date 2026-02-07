@@ -33,10 +33,10 @@ function MiniSparkline() {
 export function FinanceCard({ compact = false }: FinanceCardProps) {
   return (
     <Card className={cn("overflow-hidden transition-shadow hover:shadow-md", compact && "shadow-none")}>
-      <CardContent className={cn("flex flex-col gap-3", compact ? "p-4" : "p-5")}>
+      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
         <CategoryBadge category="Finance" />
         <div className="flex flex-col gap-1">
-          <h3 className={cn("font-semibold text-foreground leading-snug", compact ? "text-sm" : "text-base")}>
+          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
             {"Price Drop Alert \u2014 Save £30"}
           </h3>
           <p className="text-xs text-muted-foreground">Sony WH-1000XM5</p>
@@ -51,7 +51,7 @@ export function FinanceCard({ compact = false }: FinanceCardProps) {
             <span className="text-base font-medium text-muted-foreground line-through">{"£299"}</span>
           </div>
         </div>
-        <div className="rounded-xl bg-secondary p-3">
+        <div className="rounded-2xl bg-secondary p-3">
           <p className="mb-1.5 text-[11px] text-muted-foreground">Price History</p>
           <MiniSparkline />
         </div>

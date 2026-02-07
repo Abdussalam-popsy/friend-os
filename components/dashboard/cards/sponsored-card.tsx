@@ -16,10 +16,10 @@ export function SponsoredCard({ compact = false }: SponsoredCardProps) {
         compact && "shadow-none"
       )}
     >
-      <CardContent className={cn("flex flex-col gap-3", compact ? "p-4" : "p-5")}>
+      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
         <CategoryBadge category="Sponsored" />
         {/* Product image placeholder */}
-        <div className="flex h-28 items-center justify-center rounded-xl bg-secondary/60">
+        <div className="flex h-28 items-center justify-center rounded-2xl bg-secondary/60">
           <svg
             width="44"
             height="44"
@@ -32,7 +32,7 @@ export function SponsoredCard({ compact = false }: SponsoredCardProps) {
           </svg>
         </div>
         <div className="flex flex-col gap-1">
-          <h3 className={cn("font-semibold text-foreground leading-snug", compact ? "text-sm" : "text-base")}>
+          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
             {"ASOS Winter Sale \u2014 Up to 50% Off"}
           </h3>
           <div className="flex items-center gap-2">
