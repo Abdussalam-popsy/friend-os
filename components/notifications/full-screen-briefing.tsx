@@ -1,8 +1,11 @@
 "use client"
 
-import { notifications, categorySummary } from "@/data/mockData"
-import { DetailedResultCard } from "./detailed-result-card"
-import { NotificationIcon } from "./notification-icon"
+import { useState } from "react"
+import { notifications } from "@/data/mockData"
+import type { Notification } from "@/data/mockData"
+import { MoodboardCard } from "./moodboard-card"
+import { MoodboardDetailSheet } from "./moodboard-detail-sheet"
+import { useProfile } from "@/lib/profile-context"
 import { ArrowRight, X } from "lucide-react"
 
 interface FullScreenBriefingProps {
@@ -18,33 +21,23 @@ function getGreeting() {
   return "Good evening"
 }
 
-function getFormattedDate() {
-  return new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  })
-}
-
-const tileColorMap: Record<string, string> = {
-  research: "bg-blue-50 border-blue-100",
-  shopping: "bg-amber-50 border-amber-100",
-  task: "bg-teal-50 border-teal-100",
-  health: "bg-emerald-50 border-emerald-100",
-}
-
 export function FullScreenBriefing({
   isOpen,
   onClose,
   onDashboard,
 }: FullScreenBriefingProps) {
+  const { profile } = useProfile()
+  const userName = profile?.name ?? "there"
+  const [selected, setSelected] = useState<Notification | null>(null)
+
   return (
     <div
-      className={`fixed inset-0 z-[60] flex flex-col overflow-y-auto transition-all duration-500 ease-out ${isOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"}`}
+      className={`fixed inset-0 z-[60] flex flex-col overflow-y-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isOpen ? "scale-100 opacity-100" : "pointer-events-none scale-[0.98] opacity-0"
+      }`}
       style={{
         background:
-          "linear-gradient(180deg, #EFF6FF 0%, #DBEAFE 40%, #E0F2FE 100%)",
+          "linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 40%, #FAFAFA 100%)",
       }}
       role="dialog"
       aria-label="Daily briefing"
@@ -53,102 +46,72 @@ export function FullScreenBriefing({
       <button
         onClick={onClose}
         type="button"
-        className="fixed right-6 top-6 z-[70] flex h-10 w-10 items-center justify-center rounded-full bg-card text-muted-foreground shadow-md transition-all hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        className="fixed right-6 top-6 z-[70] flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-neutral-500 shadow-sm backdrop-blur-sm border border-neutral-200/40 transition-all hover:bg-white hover:text-neutral-900 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-neutral-400"
         aria-label="Close briefing"
       >
-        <X className="h-5 w-5" />
+        <X className="h-4 w-4" />
       </button>
 
-      <div className="mx-auto w-full max-w-6xl px-8 py-12">
-        {/* Header */}
-        <header className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground text-balance">
-            {getGreeting()}, Abdussalam
-          </h1>
-          <p className="mt-1 text-lg text-muted-foreground">
-            {getFormattedDate()}
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        {/* Header — centered */}
+        <header
+          className={`mb-10 text-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isOpen
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3"
+          }`}
+          style={{ transitionDelay: isOpen ? "50ms" : "0ms" }}
+        >
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-neutral-400">
+            Your Daily Style Brief
           </p>
-          <p className="mt-3 text-base text-muted-foreground">
-            {"\u2019s what I found while you were away"}
+          <h1 className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900">
+            {getGreeting()}, {userName}
+          </h1>
+          <p className="mt-1.5 text-[14px] text-neutral-500">
+            {notifications.length} items curated for you today
           </p>
         </header>
 
-        {/* Content Grid */}
-        <div className="flex gap-8">
-          {/* Left -- Detailed Cards */}
-          <div
-            className="flex flex-1 flex-col gap-4"
-            style={{ flex: "0 0 60%" }}
-          >
-            {notifications.map((n, i) => (
-              <div
-                key={n.id}
-                className="animate-in fade-in slide-in-from-bottom-4"
-                style={{
-                  animationDelay: `${i * 80}ms`,
-                  animationFillMode: "both",
-                  animationDuration: "400ms",
-                }}
-              >
-                <DetailedResultCard notification={n} />
-              </div>
-            ))}
-          </div>
+        {/* Masonry grid */}
+        <div className="columns-2 sm:columns-3 lg:columns-4 gap-4">
+          {notifications.map((n, i) => (
+            <MoodboardCard
+              key={n.id}
+              notification={n}
+              index={i}
+              isVisible={isOpen}
+              onClick={() => setSelected(n)}
+            />
+          ))}
+        </div>
 
-          {/* Right -- Summary Sidebar */}
-          <aside
-            className="sticky top-12 self-start"
-            style={{ flex: "0 0 36%" }}
+        {/* Floating CTA */}
+        <div
+          className={`sticky bottom-6 mt-10 flex justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isOpen
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-3"
+          }`}
+          style={{ transitionDelay: isOpen ? "600ms" : "0ms" }}
+        >
+          <button
+            onClick={onDashboard}
+            type="button"
+            className="flex items-center gap-2 rounded-full bg-neutral-900 px-6 py-3 text-[13px] font-semibold text-white shadow-lg transition-all hover:bg-neutral-800 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2"
           >
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-              Summary
-            </h2>
-            <div className="flex flex-col gap-3">
-              {categorySummary.map((cat, i) => (
-                <div
-                  key={cat.type}
-                  className={`flex items-center gap-3 rounded-2xl border p-4 transition-shadow hover:shadow-sm ${tileColorMap[cat.type] ?? "bg-card border-border"}`}
-                  style={{
-                    animationDelay: `${i * 60 + 200}ms`,
-                    animationFillMode: "both",
-                    animationDuration: "300ms",
-                  }}
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card shadow-sm">
-                    <NotificationIcon
-                      name={cat.iconName}
-                      className="h-5 w-5 text-foreground/70"
-                    />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-xl font-bold text-foreground">
-                        {cat.count}
-                      </span>
-                      <span className="text-sm font-medium text-foreground">
-                        {cat.label}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {cat.headline}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <button
-              onClick={onDashboard}
-              type="button"
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:shadow-lg hover:shadow-primary/30 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-            >
-              Go to Dashboard
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </aside>
+            Browse All Items
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
+
+      {/* Detail sheet */}
+      <MoodboardDetailSheet
+        notification={selected}
+        isOpen={selected !== null}
+        onClose={() => setSelected(null)}
+      />
     </div>
   )
 }

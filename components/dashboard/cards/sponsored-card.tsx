@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { CategoryBadge } from "@/components/dashboard/category-badge"
 import { CardActions } from "@/components/dashboard/card-actions"
+import { BrandLogo } from "@/components/shared/brand-logo"
 import { cn } from "@/lib/utils"
 
 interface SponsoredCardProps {
@@ -9,39 +9,38 @@ interface SponsoredCardProps {
 
 export function SponsoredCard({ compact = false }: SponsoredCardProps) {
   return (
-    <Card
-      className={cn(
-        "overflow-hidden border-border/60 transition-shadow hover:shadow-md",
-        "bg-sponsored-bg",
-        compact && "shadow-none"
-      )}
-    >
-      <CardContent className={cn("flex flex-col gap-4", compact ? "p-4 gap-3" : "p-6")}>
-        <CategoryBadge category="Sponsored" />
-        {/* Product image placeholder */}
-        <div className="flex h-28 items-center justify-center rounded-2xl bg-secondary/60">
-          <svg
-            width="44"
-            height="44"
-            viewBox="0 0 48 48"
-            fill="none"
-            className="text-muted-foreground/25"
-          >
-            <rect x="10" y="8" width="28" height="32" rx="3" stroke="currentColor" strokeWidth="2" />
-            <path d="M16 20H32M16 26H28M16 32H24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        </div>
-        <div className="flex flex-col gap-1">
-          <h3 className={cn("font-bold text-foreground leading-snug tracking-tight", compact ? "text-sm" : "text-lg")}>
-            {"ASOS Winter Sale \u2014 Up to 50% Off"}
-          </h3>
-          <div className="flex items-center gap-2">
-            <span className="text-base font-bold text-foreground">{"£24.99"}</span>
-            <span className="text-sm text-muted-foreground line-through">{"£49.99"}</span>
-            <span className="rounded-full bg-badge-green-bg px-2 py-0.5 text-xs font-bold text-badge-green">
-              -50%
-            </span>
+    <Card className={cn("overflow-hidden border-0 bg-neutral-50 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]", compact && "shadow-none bg-white")}>
+      {/* Cinematic banner — 16:9 */}
+      <div className={cn("relative overflow-hidden bg-neutral-100", compact ? "aspect-[4/3]" : "aspect-[16/9]")}>
+        <img
+          src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop&q=80"
+          alt="ASOS New Season"
+          className="h-full w-full object-cover"
+        />
+        {/* Brand logo — top-left */}
+        {!compact && (
+          <div className="absolute left-3 top-3">
+            <BrandLogo
+              logoUrl="https://img.logo.dev/asos.com?token=pk_VAMPsVSMSC-VYyGOEOYXqw"
+              brandName="ASOS"
+              size="md"
+              overlay
+            />
           </div>
+        )}
+        {/* Subtle sponsored label — bottom-right */}
+        <span className="absolute bottom-2.5 right-2.5 rounded-full bg-white/70 backdrop-blur-sm px-2 py-0.5 text-[9px] font-medium text-neutral-400">
+          Sponsored
+        </span>
+      </div>
+
+      <CardContent className={cn("flex flex-col gap-3", compact ? "p-3 gap-2" : "p-4")}>
+        <div className="flex flex-col gap-1">
+          <p className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">ASOS</p>
+          <h3 className={cn("font-medium text-neutral-900 leading-snug", compact ? "text-sm" : "text-sm")}>
+            New Season Edit — Up to 30% Off
+          </h3>
+          <span className="text-[12px] text-neutral-500">Curated picks for your style</span>
         </div>
         <CardActions
           compact={compact}
@@ -50,7 +49,7 @@ export function SponsoredCard({ compact = false }: SponsoredCardProps) {
             { label: "Not Interested", variant: "ghost" },
           ]}
         />
-        <button className="self-start text-[11px] text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors">
+        <button className="self-start text-[10px] text-neutral-400 underline underline-offset-2 hover:text-neutral-600 transition-colors">
           Why am I seeing this?
         </button>
       </CardContent>

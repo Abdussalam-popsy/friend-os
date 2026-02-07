@@ -7,6 +7,13 @@ import {
   TrendingUp,
   Bell,
   Sparkles,
+  Globe,
+  Flame,
+  Shirt,
+  Megaphone,
+  ShoppingBag,
+  MapPin,
+  Percent,
 } from "lucide-react"
 import type { ComponentType } from "react"
 import type { LucideProps } from "lucide-react"
@@ -20,6 +27,13 @@ const iconMap: Record<string, ComponentType<LucideProps>> = {
   "arrow-trending-up": TrendingUp,
   bell: Bell,
   sparkles: Sparkles,
+  globe: Globe,
+  flame: Flame,
+  shirt: Shirt,
+  megaphone: Megaphone,
+  "shopping-bag": ShoppingBag,
+  "map-pin": MapPin,
+  percent: Percent,
 }
 
 interface NotificationIconProps {

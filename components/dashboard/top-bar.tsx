@@ -1,18 +1,30 @@
 "use client"
 
-import { LayoutGrid, Columns3, ArrowLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { List, Columns3, ArrowLeft, User } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useProfile } from "@/lib/profile-context"
 
-type LayoutMode = "tabbed" | "kanban"
+type LayoutMode = "feed" | "kanban" | "profile"
 
 interface TopBarProps {
   layout: LayoutMode
-  onToggleLayout: () => void
+  onSetLayout: (layout: LayoutMode) => void
   onBack?: () => void
 }
 
-export function TopBar({ layout, onToggleLayout, onBack }: TopBarProps) {
+function isProfileIncomplete(profile: ReturnType<typeof useProfile>["profile"]): boolean {
+  if (!profile) return true
+  return (
+    profile.favouriteBrands.length === 0 ||
+    profile.styleTags.length === 0 ||
+    Object.keys(profile.sizes).length === 0 ||
+    profile.socialConnections.length === 0
+  )
+}
+
+export function TopBar({ layout, onSetLayout, onBack }: TopBarProps) {
+  const { profile } = useProfile()
+  const showProfileDot = isProfileIncomplete(profile)
   return (
     <header className="flex items-center justify-between px-8 py-5">
       <div className="flex items-center gap-3">
@@ -49,27 +61,52 @@ export function TopBar({ layout, onToggleLayout, onBack }: TopBarProps) {
           FriendOS
         </span>
       </div>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onToggleLayout}
-        className={cn(
-          "gap-2 rounded-lg border-border text-muted-foreground",
-          "hover:bg-accent hover:text-foreground transition-colors"
-        )}
-      >
-        {layout === "tabbed" ? (
-          <>
-            <Columns3 className="h-4 w-4" />
-            <span className="text-sm">Kanban</span>
-          </>
-        ) : (
-          <>
-            <LayoutGrid className="h-4 w-4" />
-            <span className="text-sm">Grid</span>
-          </>
-        )}
-      </Button>
+
+      {/* Feed / Kanban / Profile segmented control */}
+      <div className="flex rounded-lg border border-border bg-white/60 p-0.5">
+        <button
+          type="button"
+          onClick={() => onSetLayout("feed")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+            layout === "feed"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <List className="h-3.5 w-3.5" />
+          Feed
+        </button>
+        <button
+          type="button"
+          onClick={() => onSetLayout("kanban")}
+          className={cn(
+            "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+            layout === "kanban"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <Columns3 className="h-3.5 w-3.5" />
+          Kanban
+        </button>
+        <button
+          type="button"
+          onClick={() => onSetLayout("profile")}
+          className={cn(
+            "relative flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all",
+            layout === "profile"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          <User className="h-3.5 w-3.5" />
+          Profile
+          {showProfileDot && layout !== "profile" && (
+            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-neutral-900 animate-pulse-dot" />
+          )}
+        </button>
+      </div>
     </header>
   )
 }

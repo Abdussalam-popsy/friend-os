@@ -9,20 +9,25 @@ interface CardActionsProps {
 export function CardActions({ actions, compact = false }: CardActionsProps) {
   return (
     <div className={cn("flex flex-wrap items-center gap-2", compact && "gap-1.5")}>
-      {actions.map((action, i) => (
-        <Button
-          key={action.label}
-          variant={action.variant ?? (i === 0 ? "default" : "outline")}
-          size="sm"
-          className={cn(
-            "rounded-full text-xs font-medium",
-            compact && "h-7 px-2.5 text-[11px]",
-            i === 0 && !action.variant && "bg-primary text-primary-foreground hover:bg-primary/90",
-          )}
-        >
-          {action.label}
-        </Button>
-      ))}
+      {actions.map((action, i) => {
+        const variant = action.variant ?? (i === 0 ? "default" : "outline")
+        return (
+          <Button
+            key={action.label}
+            variant={variant}
+            size="sm"
+            className={cn(
+              "rounded-full text-xs font-medium",
+              compact && "h-7 px-2.5 text-[11px]",
+              variant === "default" && "bg-neutral-900 text-white hover:bg-neutral-800",
+              variant === "outline" && "border-neutral-300 text-neutral-600 hover:bg-neutral-50",
+              variant === "ghost" && "text-neutral-400 hover:text-neutral-600 hover:bg-transparent",
+            )}
+          >
+            {action.label}
+          </Button>
+        )
+      })}
     </div>
   )
 }

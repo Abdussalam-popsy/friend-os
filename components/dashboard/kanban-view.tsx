@@ -1,52 +1,46 @@
 "use client"
 
-import React, { useState, useRef, useCallback } from "react"
+import React, { useState, useCallback } from "react"
 
 import { Progress } from "@/components/ui/progress"
-import { ResearchCard } from "@/components/dashboard/cards/research-card"
-import { ShoppingCard } from "@/components/dashboard/cards/shopping-card"
-import { TaskCard } from "@/components/dashboard/cards/task-card"
-import { FinanceCard } from "@/components/dashboard/cards/finance-card"
-import { HealthCard } from "@/components/dashboard/cards/health-card"
+import { ProductCard } from "@/components/dashboard/cards/product-card"
+import { TrendingCard } from "@/components/dashboard/cards/trending-card"
+import { DealCard } from "@/components/dashboard/cards/deal-card"
+import { DropCard } from "@/components/dashboard/cards/drop-card"
+import { OutfitCard } from "@/components/dashboard/cards/outfit-card"
 import { SponsoredCard } from "@/components/dashboard/cards/sponsored-card"
 import { cn } from "@/lib/utils"
 
 type ColumnId = "todo" | "in-progress" | "done"
 
-interface KanbanItem {
-  id: string
-  component: React.ReactNode
-  label: string
-}
-
 const CARD_MAP: Record<string, (compact: boolean) => React.ReactNode> = {
-  research: (c) => <ResearchCard compact={c} />,
-  shopping: (c) => <ShoppingCard compact={c} />,
-  task: (c) => <TaskCard compact={c} />,
-  finance: (c) => <FinanceCard compact={c} />,
-  health: (c) => <HealthCard compact={c} />,
+  product: (c) => <ProductCard compact={c} />,
+  trending: (c) => <TrendingCard compact={c} />,
+  deal: (c) => <DealCard compact={c} />,
+  drop: (c) => <DropCard compact={c} />,
+  outfit: (c) => <OutfitCard compact={c} />,
   sponsored: (c) => <SponsoredCard compact={c} />,
 }
 
 const INITIAL_COLUMNS: Record<ColumnId, { id: string; label: string }[]> = {
   "todo": [
-    { id: "research", label: "Research" },
-    { id: "shopping", label: "Shopping" },
+    { id: "product", label: "Product" },
+    { id: "trending", label: "Trending" },
   ],
   "in-progress": [
-    { id: "finance", label: "Finance" },
-    { id: "health", label: "Health" },
+    { id: "deal", label: "Deal" },
+    { id: "drop", label: "Drop" },
   ],
   "done": [
-    { id: "task", label: "Task" },
+    { id: "outfit", label: "Outfit" },
     { id: "sponsored", label: "Sponsored" },
   ],
 }
 
 const COLUMN_META: { id: ColumnId; title: string }[] = [
-  { id: "todo", title: "To Do" },
-  { id: "in-progress", title: "In Progress" },
-  { id: "done", title: "Done" },
+  { id: "todo", title: "Discovered" },
+  { id: "in-progress", title: "Saved" },
+  { id: "done", title: "Purchased" },
 ]
 
 interface DraggableCardProps {
@@ -72,7 +66,6 @@ function DraggableCard({
       onDragStart={(e) => {
         e.dataTransfer.effectAllowed = "move"
         e.dataTransfer.setData("text/plain", itemId)
-        // Small delay so the browser captures the element before we fade it
         requestAnimationFrame(() => onDragStart(itemId, columnId))
       }}
       onDragEnd={onDragEnd}
@@ -212,13 +205,13 @@ export function KanbanView() {
   return (
     <div className="flex flex-col gap-5 px-8 animate-fade-in">
       <p className="text-sm text-muted-foreground">
-        {"Here\u2019s what I found while you were away. Drag cards between columns to organise them."}
+        Drag items between columns to organise your shopping journey.
       </p>
       {/* Overall progress */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-muted-foreground">
-            Overall progress
+            Shopping journey
           </span>
           <span className="text-xs font-semibold text-foreground">
             {donePercent}%
