@@ -13,7 +13,7 @@ export function SponsoredCard({ compact = false }: SponsoredCardProps) {
       {/* Cinematic banner — 16:9 */}
       <div className={cn("relative overflow-hidden bg-neutral-100", compact ? "aspect-[4/3]" : "aspect-[16/9]")}>
         <img
-          src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=600&fit=crop&q=80"
+          src="https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/i1-eef263ba-75a2-4bea-8e2f-e19d92bfeb36/M+NSW+CLUB+TEE.png"
           alt="ASOS New Season"
           className="h-full w-full object-cover"
         />

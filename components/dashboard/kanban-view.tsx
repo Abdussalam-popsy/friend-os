@@ -10,8 +10,9 @@ import { DropCard } from "@/components/dashboard/cards/drop-card"
 import { OutfitCard } from "@/components/dashboard/cards/outfit-card"
 import { SponsoredCard } from "@/components/dashboard/cards/sponsored-card"
 import { cn } from "@/lib/utils"
+import { Heart, ShoppingCart } from "lucide-react"
 
-type ColumnId = "todo" | "in-progress" | "done"
+type ColumnId = "saved" | "cart"
 
 const CARD_MAP: Record<string, (compact: boolean) => React.ReactNode> = {
   product: (c) => <ProductCard compact={c} />,
@@ -23,24 +24,19 @@ const CARD_MAP: Record<string, (compact: boolean) => React.ReactNode> = {
 }
 
 const INITIAL_COLUMNS: Record<ColumnId, { id: string; label: string }[]> = {
-  "todo": [
+  "saved": [
     { id: "product", label: "Product" },
     { id: "trending", label: "Trending" },
-  ],
-  "in-progress": [
-    { id: "deal", label: "Deal" },
     { id: "drop", label: "Drop" },
   ],
-  "done": [
-    { id: "outfit", label: "Outfit" },
-    { id: "sponsored", label: "Sponsored" },
+  "cart": [
+    { id: "deal", label: "Deal" },
   ],
 }
 
-const COLUMN_META: { id: ColumnId; title: string }[] = [
-  { id: "todo", title: "Discovered" },
-  { id: "in-progress", title: "Saved" },
-  { id: "done", title: "Purchased" },
+const COLUMN_META: { id: ColumnId; title: string; icon: typeof Heart; color: string }[] = [
+  { id: "saved", title: "Saved Items", icon: Heart, color: "text-primary" },
+  { id: "cart", title: "Cart", icon: ShoppingCart, color: "text-green-600" },
 ]
 
 interface DraggableCardProps {
@@ -83,6 +79,8 @@ interface KanbanColumnProps {
   columnId: ColumnId
   title: string
   count: number
+  icon: typeof Heart
+  color: string
   isOver: boolean
   onDragOver: (e: React.DragEvent, columnId: ColumnId) => void
   onDragLeave: () => void
@@ -94,6 +92,8 @@ function KanbanColumn({
   columnId,
   title,
   count,
+  icon: Icon,
+  color,
   isOver,
   onDragOver,
   onDragLeave,
@@ -103,6 +103,7 @@ function KanbanColumn({
   return (
     <div className="flex flex-1 flex-col gap-3">
       <div className="flex items-center gap-2 px-1">
+        <Icon className={cn("h-4 w-4", color)} />
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
         <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-[11px] font-medium text-muted-foreground">
           {count}
@@ -141,8 +142,8 @@ export function KanbanView() {
   const [overColumn, setOverColumn] = useState<ColumnId | null>(null)
 
   const total =
-    columns.todo.length + columns["in-progress"].length + columns.done.length
-  const donePercent = total > 0 ? Math.round((columns.done.length / total) * 100) : 0
+    columns.saved.length + columns.cart.length
+  const cartPercent = total > 0 ? Math.round((columns.cart.length / total) * 100) : 0
 
   const handleDragStart = useCallback(
     (itemId: string, fromColumn: ColumnId) => {
@@ -211,21 +212,23 @@ export function KanbanView() {
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-medium text-muted-foreground">
-            Shopping journey
+            Ready to purchase
           </span>
           <span className="text-xs font-semibold text-foreground">
-            {donePercent}%
+            {cartPercent}%
           </span>
         </div>
-        <Progress value={donePercent} className={cn("h-2 rounded-full")} />
+        <Progress value={cartPercent} className={cn("h-2 rounded-full")} />
       </div>
       {/* Kanban columns */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {COLUMN_META.map((col) => (
           <KanbanColumn
             key={col.id}
             columnId={col.id}
             title={col.title}
+            icon={col.icon}
+            color={col.color}
             count={columns[col.id].length}
             isOver={overColumn === col.id && draggingFrom !== col.id}
             onDragOver={handleDragOver}

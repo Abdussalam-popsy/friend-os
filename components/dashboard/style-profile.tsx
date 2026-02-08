@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { Heart, Ruler, Palette, PoundSterling, ShoppingBag, Instagram, Plus, User } from "lucide-react"
+import { Heart, Ruler, Palette, PoundSterling, ShoppingBag, Instagram, Plus, User, Camera } from "lucide-react"
 import { useProfile } from "@/lib/profile-context"
 import { DEFAULT_PROFILE } from "@/lib/profile-storage"
 import { SocialImportSheet } from "@/components/onboarding/social-import-sheet"
+import { PhotoUpload } from "@/components/shared/photo-upload"
+import { clearAllTryOnCache } from "@/lib/tryon-cache"
 import type { BrandEntry, ColourEntry } from "@/lib/profile-types"
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -13,6 +15,7 @@ export function StyleProfile() {
   const { profile, updateProfile } = useProfile()
   const p = profile ?? DEFAULT_PROFILE
   const [importPlatform, setImportPlatform] = useState<"instagram" | "pinterest" | "tiktok" | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const handleSocialImport = useCallback(
     (data: {
@@ -52,10 +55,42 @@ export function StyleProfile() {
 
   return (
     <div className="flex flex-col gap-6 px-8 pb-12 animate-fade-in">
-      <p className="text-sm text-muted-foreground">
-        Your inferred style profile, built from browsing, purchases, and
-        preferences.
-      </p>
+      {/* Photo section */}
+      <div className="flex items-center gap-5 rounded-2xl border border-border/50 bg-white/70 backdrop-blur-sm p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <PhotoUpload
+          currentPhotoUrl={p.photoUrl}
+          onPhotoChange={(dataUrl) => {
+            updateProfile({ photoUrl: dataUrl })
+            clearAllTryOnCache()
+          }}
+          size="md"
+        />
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <Camera className="h-4 w-4 text-neutral-500" />
+            Your Photo
+          </h3>
+          <p className="mt-0.5 text-[12px] text-neutral-500">
+            {p.photoUrl
+              ? "Used for virtual try-on in your moodboard."
+              : "Add a photo to see yourself wearing products."}
+          </p>
+        </div>
+      </div>
+
+      {/* Header with Edit button */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Your inferred style profile, built from browsing, purchases, and
+          preferences.
+        </p>
+        <button
+          onClick={() => setIsEditing(!isEditing)}
+          className="text-sm font-medium text-primary hover:underline transition-all"
+        >
+          {isEditing ? "Done" : "Edit"}
+        </button>
+      </div>
 
       {/* Profile completeness banner */}
       {(p.favouriteBrands.length === 0 ||
@@ -92,25 +127,41 @@ export function StyleProfile() {
           icon={<Heart className="h-4 w-4" />}
           title="Favourite Brands"
         >
-          <div className="flex flex-wrap gap-2">
-            {p.favouriteBrands.map((b) => (
-              <span
-                key={b.name}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-neutral-700 shadow-sm"
-              >
-                <img
-                  src={b.logoUrl}
-                  alt=""
-                  className="h-4 w-auto"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                />
-                {b.name}
-              </span>
-            ))}
-            {p.favouriteBrands.length === 0 && (
-              <span className="text-[12px] text-neutral-400">No brands added yet</span>
-            )}
-          </div>
+          {isEditing ? (
+            <input
+              type="text"
+              value={p.favouriteBrands.map(b => b.name).join(", ")}
+              onChange={(e) => {
+                const brands = e.target.value.split(",").map(name => ({
+                  name: name.trim(),
+                  logoUrl: `https://img.logo.dev/${name.trim().toLowerCase().replace(/\s+/g, '')}.com?token=pk_VAMPsVSMSC-VYyGOEOYXqw`
+                })).filter(b => b.name)
+                updateProfile({ favouriteBrands: brands })
+              }}
+              placeholder="Nike, Adidas, Zara..."
+              className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-[12px] focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {p.favouriteBrands.map((b) => (
+                <span
+                  key={b.name}
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-neutral-700 shadow-sm"
+                >
+                  <img
+                    src={b.logoUrl}
+                    alt=""
+                    className="h-4 w-auto"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                  />
+                  {b.name}
+                </span>
+              ))}
+              {p.favouriteBrands.length === 0 && (
+                <span className="text-[12px] text-neutral-400">No brands added yet</span>
+              )}
+            </div>
+          )}
         </SectionCard>
 
         {/* Preferred Colours */}

@@ -8,13 +8,17 @@ import { Dashboard } from "@/components/dashboard/dashboard"
 import { ChatBubbleIcon } from "@/components/chat/chat-bubble-icon"
 import { ChatPanel } from "@/components/chat/chat-panel"
 import { ProfileProvider, useProfile } from "@/lib/profile-context"
+import { AuthProvider, useAuth } from "@/lib/auth-context"
+import { AuthModal } from "@/components/auth/auth-modal"
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow"
 
 export default function Page() {
   return (
-    <ProfileProvider>
-      <AppShell />
-    </ProfileProvider>
+    <AuthProvider>
+      <ProfileProvider>
+        <AppShell />
+      </ProfileProvider>
+    </AuthProvider>
   )
 }
 
@@ -29,10 +33,14 @@ interface BubblePosition {
 
 function AppShell() {
   const { profile, isLoaded } = useProfile()
+  const { user, isLoading: authLoading } = useAuth()
   const [view, setView] = useState<ViewState>("desktop")
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
   const [chatUnread, setChatUnread] = useState(true)
+
+  // Feature flag: Set to true to require authentication, false to make it optional
+  const REQUIRE_AUTH = false
 
   // Bubble position — default bottom-right, initialized after mount
   const [bubblePos, setBubblePos] = useState<BubblePosition>({
@@ -89,7 +97,23 @@ function AppShell() {
   }, [])
 
   // Don't render anything until localStorage has been read (prevents flash)
-  if (!isLoaded) return null
+  if (!isLoaded || authLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-neutral-50">
+        <div className="text-center">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-900 text-white font-bold text-xl mb-4">
+            F
+          </div>
+          <p className="text-sm text-neutral-500">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show auth modal if authentication is required and user is not logged in
+  if (REQUIRE_AUTH && !user) {
+    return <AuthModal />
+  }
 
   return (
     <main className="relative h-screen w-screen overflow-hidden">

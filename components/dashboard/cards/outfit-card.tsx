@@ -12,10 +12,10 @@ interface OutfitCardProps {
 }
 
 const OUTFIT_ITEMS = [
-  { name: "Relaxed Wool Blazer", brand: "COS", price: "£89", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300&h=300&fit=crop&q=80" },
-  { name: "Heavyweight Cotton Tee", brand: "Arket", price: "£28", image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=300&h=300&fit=crop&q=80" },
-  { name: "Wide-Leg Chinos", brand: "Uniqlo U", price: "£49", image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=300&h=300&fit=crop&q=80" },
-  { name: "New Balance 990v6", brand: "New Balance", price: "£185", image: "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?w=300&h=300&fit=crop&q=80" },
+  { name: "Relaxed Wool Blazer", brand: "COS", price: "£89", image: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png" },
+  { name: "Heavyweight Cotton Tee", brand: "Arket", price: "£28", image: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/a7e41722-a82a-42ae-90f2-1f74bc79cfd9/M+NK+DF+MILER+SS.png" },
+  { name: "Wide-Leg Chinos", brand: "Uniqlo U", price: "£49", image: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/e4fb1f97-3315-45f5-9249-6d4262a1de19/M+NK+DF+FORM+HD+JKT.png" },
+  { name: "New Balance 990v6", brand: "New Balance", price: "£185", image: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/958ae8fb-c27c-4441-9637-eeeb69f1ce78/M+NK+DF+FORM+HD+JKT.png" },
 ]
 
 export function OutfitCard({ compact = false }: OutfitCardProps) {

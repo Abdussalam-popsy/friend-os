@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo, useEffect } from "react"
 import { MessageList, type ChatMessage } from "./message-list"
 import { QuickActions } from "./quick-actions"
 import { StylistQuickActions } from "./stylist-quick-actions"
 import { ProfileUpdatePrompt } from "./profile-update-prompt"
 import { ChatInput } from "./chat-input"
 import { useProfile } from "@/lib/profile-context"
+import { backendService } from "@/lib/backend-service"
+import type { ChatMessage as BackendChatMessage } from "@/lib/backend-types"
 import { Minus, Sparkles, MessageCircle } from "lucide-react"
 
 type ChatMode = "chat" | "stylist"
@@ -105,6 +107,57 @@ export function ChatPanel({ isOpen, onClose, bubblePosition }: ChatPanelProps) {
     field: "styleTags" | "brands"
   } | null>(null)
 
+  // Socket.IO listeners for real-time backend communication
+  useEffect(() => {
+    // Listen for chat responses
+    const unsubscribeResponse = backendService.onChatResponse((message: BackendChatMessage) => {
+      const assistantMsg: ChatMessage = {
+        id: message.id,
+        role: message.role,
+        content: message.content,
+      }
+      setMessages((prev) => [...prev, assistantMsg])
+      setIsLoading(false)
+
+      // In stylist mode, check if the reply suggests a new style
+      if (mode === "stylist") {
+        const detected = detectProfileSuggestion(
+          message.content,
+          profile?.styleTags ?? []
+        )
+        if (detected) {
+          setProfilePrompt(detected)
+        }
+      }
+    })
+
+    // Listen for thinking steps (optional: log to console)
+    const unsubscribeThinking = backendService.onThinking((event) => {
+      console.log("[Agent Thinking]:", event.thought)
+      // Optionally show in UI with a typing indicator or thought bubble
+    })
+
+    // Listen for tool executions (optional: show tool activity)
+    const unsubscribeTool = backendService.onToolExecution((event) => {
+      console.log("[Tool Execution]:", event.tool, event.status, event.output)
+      // Optionally show tool execution status in UI
+    })
+
+    // Listen for typing indicator
+    const unsubscribeTyping = backendService.onTyping((event) => {
+      // This could be used to show a typing indicator in the UI
+      console.log("[Typing]:", event.isTyping)
+    })
+
+    // Cleanup on unmount
+    return () => {
+      unsubscribeResponse()
+      unsubscribeThinking()
+      unsubscribeTool()
+      unsubscribeTyping()
+    }
+  }, [mode, profile?.styleTags])
+
   const sendMessage = useCallback(
     async (text: string) => {
       const userMsg: ChatMessage = {
@@ -112,54 +165,24 @@ export function ChatPanel({ isOpen, onClose, bubblePosition }: ChatPanelProps) {
         role: "user",
         content: text,
       }
-      const updatedMessages = [...messages, userMsg]
-      setMessages(updatedMessages)
+      setMessages((prev) => [...prev, userMsg])
       setIsLoading(true)
       setProfilePrompt(null)
 
       try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: updatedMessages.map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
-            profile: profile
-              ? {
-                  name: profile.name,
-                  brands: profile.favouriteBrands.map((b) => b.name),
-                  priceRange: profile.priceRange,
-                  styleTags: profile.styleTags,
-                  sizes: profile.sizes,
-                }
-              : undefined,
-            mode,
-          }),
-        })
-
-        const data = await res.json()
-
-        const reply = data.reply ?? "Hmm, I didn't get that. Try again?"
-        const assistantMsg: ChatMessage = {
-          id: nextId(),
-          role: "assistant",
-          content: reply,
+        // Create backend-compatible message format
+        const backendMessage: BackendChatMessage = {
+          id: userMsg.id,
+          role: "user",
+          content: text,
+          timestamp: Date.now(),
         }
-        setMessages((prev) => [...prev, assistantMsg])
 
-        // In stylist mode, check if the reply suggests a new style
-        if (mode === "stylist") {
-          const detected = detectProfileSuggestion(
-            reply,
-            profile?.styleTags ?? []
-          )
-          if (detected) {
-            setProfilePrompt(detected)
-          }
-        }
-      } catch {
+        // Send via Socket.IO instead of fetch
+        backendService.sendMessage(backendMessage)
+
+        // Response will arrive via Socket.IO event listener (see useEffect above)
+      } catch (error) {
         const errorMsg: ChatMessage = {
           id: nextId(),
           role: "assistant",
@@ -167,7 +190,6 @@ export function ChatPanel({ isOpen, onClose, bubblePosition }: ChatPanelProps) {
             "Sorry, I'm having trouble connecting. Try again in a moment.",
         }
         setMessages((prev) => [...prev, errorMsg])
-      } finally {
         setIsLoading(false)
       }
     },

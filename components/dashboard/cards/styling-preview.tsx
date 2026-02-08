@@ -58,7 +58,7 @@ export function StylingPreview({
       } else {
         setResult({
           imageUrl:
-            "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600&h=800&fit=crop&q=80",
+            "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png",
           fallback: true,
           description: `A styled look featuring the ${productName} by ${brand}`,
         })
@@ -66,7 +66,7 @@ export function StylingPreview({
     } catch {
       setResult({
         imageUrl:
-          "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600&h=800&fit=crop&q=80",
+          "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png",
         fallback: true,
         description: `A styled look featuring the ${productName} by ${brand}`,
       })

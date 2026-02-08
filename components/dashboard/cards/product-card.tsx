@@ -21,7 +21,7 @@ export function ProductCard({ compact = false }: ProductCardProps) {
         {/* Full-bleed hero image with brand logo overlay */}
         <div className={cn("relative overflow-hidden bg-neutral-100", compact ? "aspect-[4/3]" : "aspect-[3/4]")}>
           <img
-            src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=600&h=600&fit=crop&q=80"
+            src="https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png"
             alt="Nike Air Max 90"
             className="h-full w-full object-cover"
           />

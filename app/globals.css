@@ -58,6 +58,14 @@
   border-radius: 9999px;
 }
 
+/* Hidden scrollbar — still scrollable */
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

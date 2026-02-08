@@ -21,7 +21,7 @@ export function DealCard({ compact = false }: DealCardProps) {
         {/* Hero image with discount sticker */}
         <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100">
           <img
-            src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=600&fit=crop&q=80"
+            src="https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/e4fb1f97-3315-45f5-9249-6d4262a1de19/M+NK+DF+FORM+HD+JKT.png"
             alt="COS Wool Overcoat"
             className="h-full w-full object-cover"
           />

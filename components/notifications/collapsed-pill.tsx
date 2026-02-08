@@ -51,8 +51,11 @@ export function CollapsedPill({ onClick }: CollapsedPillProps) {
         aria-label="Close notifications"
       />
 
-      {/* Container — fixed top-right */}
-      <div className="fixed top-6 right-6 z-50" style={{ width: 372 }}>
+      {/* Container — fixed top-right, scrollable when expanded */}
+      <div
+        className={`fixed top-6 right-6 z-50 flex flex-col ${expanded ? "bottom-6 overflow-hidden" : ""}`}
+        style={{ width: 372 }}
+      >
         {/* Count badge */}
         {total > 1 && (
           <span
@@ -85,15 +88,19 @@ export function CollapsedPill({ onClick }: CollapsedPillProps) {
           </button>
         </div>
 
-        {/* ── Single card container that morphs ── */}
+        {/* ── Scrollable card container that morphs ── */}
         <div
-          className="relative transition-[height] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          className={`transition-[height] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${expanded ? "flex-1 min-h-0 overflow-y-auto scrollbar-hide" : ""}`}
           style={{
             height: expanded
-              ? expandedListH
-              : CARD_H + (Math.min(total, 3) - 1) * 8, // front card + peek of behind cards
+              ? undefined
+              : CARD_H + (Math.min(total, 3) - 1) * 8,
           }}
         >
+          <div
+            className="relative"
+            style={{ height: expanded ? expandedListH : undefined }}
+          >
           {notifications.map((n, i) => {
             /* When collapsed: only show first 3, stacked */
             const visibleInStack = i < 3
@@ -178,6 +185,7 @@ export function CollapsedPill({ onClick }: CollapsedPillProps) {
               </div>
             )
           })}
+          </div>
         </div>
 
         {/* Footer CTA */}

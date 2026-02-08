@@ -1,7 +1,11 @@
 "use client"
 
+import { useRef, useEffect } from "react"
 import type { Notification } from "@/data/mockData"
 import { BrandLogo } from "@/components/shared/brand-logo"
+import { useFaceSwap } from "@/hooks/use-faceswap"
+import { useProfile } from "@/lib/profile-context"
+import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface MoodboardCardProps {
@@ -15,7 +19,10 @@ const ASPECT_MAP = {
   tall: "aspect-[3/4]",
   wide: "aspect-[4/3]",
   standard: "aspect-square",
+  tall_tryon: "aspect-[4/5]", // Wider portrait for try-on images
 } as const
+
+const ELIGIBLE_TYPES = new Set(["product", "trending", "deal"])
 
 export function MoodboardCard({
   notification,
@@ -23,7 +30,7 @@ export function MoodboardCard({
   index,
   isVisible,
 }: MoodboardCardProps) {
-  const aspect = ASPECT_MAP[notification.masonrySize ?? "standard"]
+  const { profile } = useProfile()
   const details = notification.details
   const isOutfit = notification.type === "outfit" && details?.outfitItems
 
@@ -31,8 +38,50 @@ export function MoodboardCard({
   const priceDisplay =
     details?.salePrice ?? details?.currentPrice ?? details?.totalPrice
 
+  // Face-swap hook
+  const faceSwapEligible =
+    ELIGIBLE_TYPES.has(notification.type) && !!profile?.photoUrl
+  const { faceSwapImageUrl, isGenerating, error, generate } = useFaceSwap({
+    productId: notification.id,
+    productImageUrl: notification.image ?? "",
+    enabled: faceSwapEligible,
+  })
+
+  // Conditional aspect ratio: wider for try-on images
+  const baseAspect = ASPECT_MAP[notification.masonrySize ?? "standard"]
+  const aspect = faceSwapImageUrl && notification.masonrySize === "tall"
+    ? ASPECT_MAP.tall_tryon
+    : baseAspect
+
+  // IntersectionObserver — trigger generation when card enters viewport
+  const cardRef = useRef<HTMLDivElement>(null)
+  const hasTriggered = useRef(false)
+
+  useEffect(() => {
+    if (!faceSwapEligible || hasTriggered.current || faceSwapImageUrl) return
+
+    const el = cardRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasTriggered.current) {
+          console.log(`[MoodboardCard] Card ${notification.id} entered viewport, triggering face-swap`)
+          hasTriggered.current = true
+          generate()
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.3 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [faceSwapEligible, faceSwapImageUrl, generate])
+
   return (
     <div
+      ref={cardRef}
       className={cn(
         "break-inside-avoid mb-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
         isVisible
@@ -68,20 +117,58 @@ export function MoodboardCard({
               ))}
             </div>
           ) : (
-            /* Single image */
-            <img
-              src={notification.image}
-              alt={notification.title}
-              className={cn(
-                "h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]",
-                notification.type === "drop" && "opacity-85",
+            <>
+              {/* Base layer: original product image (always rendered) */}
+              <img
+                src={notification.image}
+                alt={notification.title}
+                className={cn(
+                  "h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]",
+                  notification.type === "drop" && "opacity-85",
+                )}
+              />
+
+              {/* Face-swap overlay: crossfades in when ready */}
+              {faceSwapImageUrl && (
+                <img
+                  src={faceSwapImageUrl}
+                  alt={`Your look: ${notification.title}`}
+                  className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out group-hover:scale-[1.03]"
+                />
               )}
-            />
+
+              {/* Shimmer overlay while generating */}
+              {isGenerating && (
+                <div className="absolute inset-0 z-[5]">
+                  <div className="absolute inset-x-0 bottom-0 h-1/3 overflow-hidden">
+                    <div className="h-full w-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-tryon-shimmer" />
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Face-swap badge */}
+          {faceSwapImageUrl && (
+            <span className="absolute right-2.5 top-2.5 z-10 flex items-center gap-1 rounded-full bg-white/80 backdrop-blur-sm px-2 py-0.5 text-[9px] font-medium text-neutral-500 shadow-sm border border-white/40">
+              <Sparkles className="h-2.5 w-2.5" />
+              Your Look
+            </span>
+          )}
+
+          {/* Error indicator (only shown if error exists and not generating) */}
+          {error && !isGenerating && (
+            <span className="absolute right-2.5 top-2.5 z-10 flex items-center gap-1 rounded-full bg-red-500/90 backdrop-blur-sm px-2 py-0.5 text-[9px] font-medium text-white shadow-sm border border-red-400/40">
+              Try-On Failed
+            </span>
           )}
 
           {/* Brand logo — always visible, top-left */}
           {details?.brandLogoUrl && (
-            <div className="absolute left-2.5 top-2.5 z-10">
+            <div className={cn(
+              "absolute left-2.5 top-2.5 z-10",
+              faceSwapImageUrl && "top-2.5" // keep position even with face-swap badge
+            )}>
               <BrandLogo
                 logoUrl={details.brandLogoUrl}
                 brandName={details.brand}

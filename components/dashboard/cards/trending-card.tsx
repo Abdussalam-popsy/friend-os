@@ -21,7 +21,7 @@ export function TrendingCard({ compact = false }: TrendingCardProps) {
         {/* Full-bleed hero image with social proof overlay */}
         <div className={cn("relative overflow-hidden bg-neutral-100", compact ? "aspect-[4/3]" : "aspect-[3/4]")}>
           <img
-            src="https://images.unsplash.com/photo-1588850561407-ed78c334e67a?w=600&h=600&fit=crop&q=80"
+            src="https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/a7e41722-a82a-42ae-90f2-1f74bc79cfd9/M+NK+DF+MILER+SS.png"
             alt="Carhartt WIP Beanie"
             className="h-full w-full object-cover"
           />

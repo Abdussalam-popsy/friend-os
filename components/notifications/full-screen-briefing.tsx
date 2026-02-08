@@ -5,6 +5,7 @@ import { notifications } from "@/data/mockData"
 import type { Notification } from "@/data/mockData"
 import { MoodboardCard } from "./moodboard-card"
 import { MoodboardDetailSheet } from "./moodboard-detail-sheet"
+import { TryOnPhotoPrompt } from "./tryon-photo-prompt"
 import { useProfile } from "@/lib/profile-context"
 import { ArrowRight, X } from "lucide-react"
 
@@ -75,15 +76,25 @@ export function FullScreenBriefing({
 
         {/* Masonry grid */}
         <div className="columns-2 sm:columns-3 lg:columns-4 gap-4">
-          {notifications.map((n, i) => (
-            <MoodboardCard
-              key={n.id}
-              notification={n}
-              index={i}
-              isVisible={isOpen}
-              onClick={() => setSelected(n)}
-            />
-          ))}
+          {notifications.filter(n => n.type !== "outfit").map((n, i) => {
+            // Insert TryOnPhotoPrompt at position 2 for users without a photo
+            const showPrompt =
+              i === 2 &&
+              profile?.onboardingComplete &&
+              !profile?.photoUrl
+
+            return (
+              <div key={n.id}>
+                {showPrompt && <TryOnPhotoPrompt index={i} isVisible={isOpen} />}
+                <MoodboardCard
+                  notification={n}
+                  index={showPrompt ? i + 1 : i}
+                  isVisible={isOpen}
+                  onClick={() => setSelected(n)}
+                />
+              </div>
+            )
+          })}
         </div>
 
         {/* Floating CTA */}

@@ -13,7 +13,7 @@ export function DropCard({ compact = false }: DropCardProps) {
       {/* Cinematic lookbook hero — 16:9 */}
       <div className={cn("relative overflow-hidden bg-neutral-900", compact ? "aspect-[4/3]" : "aspect-[16/9]")}>
         <img
-          src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&h=600&fit=crop&q=80"
+          src="https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/958ae8fb-c27c-4441-9637-eeeb69f1ce78/M+NK+DF+FORM+HD+JKT.png"
           alt="Stüssy Spring 2025"
           className="h-full w-full object-cover opacity-80"
         />
@@ -58,9 +58,9 @@ export function DropCard({ compact = false }: DropCardProps) {
         {/* Preview thumbnail strip */}
         <div className="flex gap-1.5">
           {[
-            "https://images.unsplash.com/photo-1621072156002-e2fccdc0b176?w=300&h=300&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=300&h=300&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=300&h=300&fit=crop&q=80",
+            "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png",
+            "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/a7e41722-a82a-42ae-90f2-1f74bc79cfd9/M+NK+DF+MILER+SS.png",
+            "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/e4fb1f97-3315-45f5-9249-6d4262a1de19/M+NK+DF+FORM+HD+JKT.png",
           ].map((url, i) => (
             <div key={i} className={cn("flex-1 overflow-hidden rounded-lg bg-neutral-100", compact ? "h-12" : "h-20")}>
               <img src={url} alt="" className="h-full w-full object-cover" />

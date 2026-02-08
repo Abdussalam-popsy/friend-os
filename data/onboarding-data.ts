@@ -12,42 +12,42 @@ export const STYLE_ARCHETYPES: StyleArchetype[] = [
   {
     id: "streetwear",
     label: "Streetwear",
-    imageUrl: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png",
   },
   {
     id: "minimalist",
     label: "Minimalist",
-    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/a7e41722-a82a-42ae-90f2-1f74bc79cfd9/M+NK+DF+MILER+SS.png",
   },
   {
     id: "smart-casual",
     label: "Smart Casual",
-    imageUrl: "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/e4fb1f97-3315-45f5-9249-6d4262a1de19/M+NK+DF+FORM+HD+JKT.png",
   },
   {
     id: "scandi",
     label: "Scandi",
-    imageUrl: "https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/958ae8fb-c27c-4441-9637-eeeb69f1ce78/M+NK+DF+FORM+HD+JKT.png",
   },
   {
     id: "workwear",
     label: "Workwear",
-    imageUrl: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/i1-eef263ba-75a2-4bea-8e2f-e19d92bfeb36/M+NSW+CLUB+TEE.png",
   },
   {
     id: "athleisure",
     label: "Athleisure",
-    imageUrl: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/77902123-b424-4ad4-a0fd-fb177c82232d/M+NK+DF+MILER+SS.png",
   },
   {
     id: "avant-garde",
     label: "Avant-Garde",
-    imageUrl: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/a7e41722-a82a-42ae-90f2-1f74bc79cfd9/M+NK+DF+MILER+SS.png",
   },
   {
     id: "classic",
     label: "Classic",
-    imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=300&h=400&fit=crop",
+    imageUrl: "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto/e4fb1f97-3315-45f5-9249-6d4262a1de19/M+NK+DF+FORM+HD+JKT.png",
   },
 ]
 

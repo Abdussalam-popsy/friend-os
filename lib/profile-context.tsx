@@ -43,9 +43,14 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = useCallback(
     (partial: Partial<UserProfile>) => {
+      console.log("[ProfileContext] updateProfile called with:", Object.keys(partial))
       setProfileState((prev) => {
-        if (!prev) return prev
+        if (!prev) {
+          console.log("[ProfileContext] No existing profile, skipping update")
+          return prev
+        }
         const updated = { ...prev, ...partial }
+        console.log("[ProfileContext] Saving updated profile, has photo:", !!updated.photoUrl)
         saveProfile(updated)
         return updated
       })
@@ -54,6 +59,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   )
 
   const setProfile = useCallback((newProfile: UserProfile) => {
+    console.log("[ProfileContext] setProfile called, has photo:", !!newProfile.photoUrl)
     setProfileState(newProfile)
     saveProfile(newProfile)
   }, [])

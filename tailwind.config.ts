@@ -106,6 +106,10 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(16px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        'tryon-shimmer': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -114,6 +118,7 @@ const config: Config = {
         'fade-in': 'fade-in 0.3s ease-out',
         'soft-pulse': 'soft-pulse 2s ease-in-out infinite',
         'slide-up': 'slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'tryon-shimmer': 'tryon-shimmer 1.5s ease-in-out infinite',
       },
     },
   },

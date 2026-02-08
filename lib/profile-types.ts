@@ -19,6 +19,9 @@ export interface UserProfile {
   /** Connected social accounts */
   socialConnections: SocialConnection[]
 
+  /** Base64 data URL of user's selfie for virtual try-on */
+  photoUrl?: string
+
   /** Timestamps */
   createdAt: string
   updatedAt: string
